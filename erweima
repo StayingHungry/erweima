@@ -1,0 +1,27 @@
+import win32com
+from win32com.client import Dispatch, constants
+import qrcode
+import os
+from io import BytesIO
+wordApp = win32com.client.Dispatch('Word.Application')
+wordApp.Visible = True
+doc = wordApp.Documents.Add()
+sel = wordApp.Selection
+urls_file = open("urls.txt")
+urls = urls_file.readlines()
+try:
+    for url in urls:
+        img = qrcode.make(url)
+        path = os.getcwd()
+        img.save("D:\\erweima.png")
+        wordApp.Selection.InlineShapes.AddPicture(FileName=r"D:\\erweima.png",LinkToFile= False,SaveWithDocument=True)
+        doc.SaveAs("D:\\test.docx")
+        doc.Close(True)
+        wordApp.Application.Quit(-1)
+        # sel.InlineShapes.AddPicture("D:\\python_projects\\erweima")
+        # wordApp.Selection.InlineShapes.AddPicture(FileName="./erweima.png",LinkToFile= False,SaveWithDocument=True)
+        # fake_buf_file = BytesIO()
+        # img.save(fake_buf_file,"png")
+        # doc.add_picture(fake_buf_file)
+except Exception, msg:
+    print(msg)
